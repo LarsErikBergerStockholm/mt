@@ -15,6 +15,7 @@
       <img :src="movie.Poster" alt="Image" />
     </li>
   </ul>
+  <p v-if="error">{{ error }}</p>
 </template>
 
 <script setup>
@@ -36,7 +37,7 @@ const search = async () => {
     const response = await fetch(url);
     const data = await response.json();
 
-    if (data.Response) {
+    if (data.Response === 'True') {
       movies.value = data.Search;
     } else {
       movies.value = [];

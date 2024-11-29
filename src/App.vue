@@ -13,6 +13,10 @@ provide('addFavorite', (movie) => {
     favorites.value.push(movie);
   }
 });
+provide('removeFavorite', (movie) => {
+  const movieId = movie.imdbID;
+  favorites.value = favorites.value.filter((fav) => fav.imdbID !== movieId);
+});
 </script>
 
 <style scoped></style>

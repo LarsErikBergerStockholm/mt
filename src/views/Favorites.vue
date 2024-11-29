@@ -5,6 +5,7 @@
       <li v-for="(favorite, index) in favorites" :key="index">
         {{ favorite.Title }}
         <img :src="favorite.Poster" alt="Movie Poster" />
+        <button @click="removeFavorite(favorite)">Remove</button>
       </li>
     </ul>
     <div v-else>
@@ -17,4 +18,5 @@
 <script setup>
 import { inject } from 'vue';
 const favorites = inject('favorites');
+const removeFavorite = inject('removeFavorite');
 </script>

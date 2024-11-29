@@ -22,13 +22,13 @@
       <button @click="toggleDetails(movie)">View details</button>
       <button @click="addFavorite(movie)">Add to my list</button>
       <div v-if="toggleItems.some((item) => item.imdbID === movie.imdbID)">
-        <p>Director:{{ movieDetail.Director }}</p>
-        <p>Genre:{{ movieDetail.Genre }}</p>
-        <p>Actors:{{ movieDetail.Actors }}</p>
-        <p>Plot:{{ movieDetail.Plot }}</p>
-        <li v-for="rating in movieDetail.Ratings" :key="rating.Source">
-          <p>{{ rating.Source }}</p>
-          <p>{{ rating.Value }}</p>
+        <p>Director:{{ movieDetail?.Director }}</p>
+        <p>Genre:{{ movieDetail?.Genre }}</p>
+        <p>Actors:{{ movieDetail?.Actors }}</p>
+        <p>Plot:{{ movieDetail?.Plot }}</p>
+        <li v-for="rating in movieDetail?.Ratings" :key="rating.Source">
+          <p>{{ rating?.Source }}</p>
+          <p>{{ rating?.Value }}</p>
         </li>
       </div>
     </li>

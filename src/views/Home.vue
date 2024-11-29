@@ -1,4 +1,5 @@
 <template>
+  <button @click="$router.push('/favorites')">My top picks</button>
   <div>
     <input
       type="text"
@@ -20,10 +21,11 @@
       <p v-else>Oh no 😢, no poster!</p>
       <button @click="toggleDetails(movie)">View details</button>
       <div v-if="toggleItems.some((item) => item.imdbID === movie.imdbID)">
+        <p>Director:{{ movieDetail.Director }}</p>
         <p>Genre:{{ movieDetail.Genre }}</p>
         <p>Actors:{{ movieDetail.Actors }}</p>
         <p>Plot:{{ movieDetail.Plot }}</p>
-        <li v-for="rating in movieDetail?.Ratings" :key="rating.Source">
+        <li v-for="rating in movieDetail.Ratings" :key="rating.Source">
           <p>{{ rating.Source }}</p>
           <p>{{ rating.Value }}</p>
         </li>

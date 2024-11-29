@@ -20,6 +20,7 @@
       />
       <p v-else>Oh no 😢, no poster!</p>
       <button @click="toggleDetails(movie)">View details</button>
+      <button @click="addFavorite(movie)">Add to my list</button>
       <div v-if="toggleItems.some((item) => item.imdbID === movie.imdbID)">
         <p>Director:{{ movieDetail.Director }}</p>
         <p>Genre:{{ movieDetail.Genre }}</p>
@@ -36,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
 const movieTitle = ref('');
 const movies = ref([]);
@@ -45,6 +46,8 @@ const movieDetail = ref(null);
 const toggleItems = ref([]);
 
 const key = import.meta.env.VITE_API_KEY;
+
+const addFavorite = inject('addFavorite');
 
 const toggleDetails = (movie) => {
   const index = toggleItems.value.findIndex(

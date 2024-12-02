@@ -1,22 +1,43 @@
 <template>
   <div>
-    <h1>Favorite Movies</h1>
-    <ul v-if="favorites.length">
-      <li v-for="(favorite, index) in favorites" :key="index">
-        {{ favorite.Title }}
-        <img :src="favorite.Poster" alt="Movie Poster" />
-        <button @click="removeFavorite(favorite)">Remove</button>
-      </li>
-    </ul>
-    <div v-else>
-      <p>No favorite movies added yet.</p>
-    </div>
-    <button @click="$router.push('/')">Back to search</button>
+    <span class="nav-wrapper">
+      <button class="nav-button" @click="$router.push('/')">
+        Back to search
+      </button>
+    </span>
+    <h1>My top picks</h1>
+    <FavoritesList />
   </div>
 </template>
 
 <script setup>
-import { inject } from 'vue';
-const favorites = inject('favorites');
-const removeFavorite = inject('removeFavorite');
+import FavoritesList from '../components/FavoritesList.vue';
 </script>
+
+<style scoped>
+h1 {
+  font-size: 1.4375rem;
+  margin-bottom: 0.9375rem;
+}
+
+h2 {
+  font-size: 1rem;
+}
+
+.list-image {
+  width: 100%;
+}
+
+.nav-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5625rem;
+}
+
+.nav-button {
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  margin-top: 1.5625rem;
+  border: none;
+}
+</style>

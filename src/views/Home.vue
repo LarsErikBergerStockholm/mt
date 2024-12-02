@@ -1,88 +1,47 @@
 <template>
-  <button @click="$router.push('/favorites')">My top picks</button>
-  <div>
-    <input
-      type="text"
-      v-model="movieTitle"
-      @keyup.enter="search"
-      placeholder="Enter movie title"
-    />
-    <button @click="search">Search</button>
-  </div>
-  <ul v-if="movies.length">
-    <li v-for="movie in movies" :key="movie.imdbID">
-      <p>{{ movie.Title }}</p>
-      <p>{{ movie.Year }}</p>
-      <img
-        v-if="movie.Poster && movie.Poster !== 'N/A'"
-        :src="movie.Poster"
-        alt="Image"
+  <div class="container">
+    <span class="nav-wrapper">
+      <button class="nav-button" @click="$router.push('/favorites')">
+        My top picks
+      </button>
+    </span>
+    <div class="search-wrapper">
+      <input
+        class="search"
+        type="text"
+        v-model="movieTitle"
+        @keyup.enter="search"
+        placeholder="Enter movie title"
       />
-      <p v-else>Oh no 😢, no poster!</p>
-      <button @click="toggleDetails(movie)">View details</button>
-      <button @click="addFavorite(movie)">Add to my list</button>
-      <div v-if="toggleItems.some((item) => item.imdbID === movie.imdbID)">
-        <p>Director:{{ movieDetail?.Director }}</p>
-        <p>Genre:{{ movieDetail?.Genre }}</p>
-        <p>Actors:{{ movieDetail?.Actors }}</p>
-        <p>Plot:{{ movieDetail?.Plot }}</p>
-        <li v-for="rating in movieDetail?.Ratings" :key="rating.Source">
-          <p>{{ rating?.Source }}</p>
-          <p>{{ rating?.Value }}</p>
-        </li>
-      </div>
-    </li>
-  </ul>
-  <p v-if="error">{{ error }}</p>
+      <button class="search-button" @click="search">Search</button>
+    </div>
+    <div v-if="loading" class="loading">Loading...</div>
+    <MoviesList :movies="movies" />
+    <p v-if="error">{{ error }}</p>
+  </div>
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref } from 'vue';
+import MoviesList from '../components/MoviesList.vue';
+
+const key = import.meta.env.VITE_API_KEY;
 
 const movieTitle = ref('');
 const movies = ref([]);
 const error = ref(null);
-const movieDetail = ref(null);
-const toggleItems = ref([]);
-
-const key = import.meta.env.VITE_API_KEY;
-
-const addFavorite = inject('addFavorite');
-
-const toggleDetails = (movie) => {
-  const index = toggleItems.value.findIndex(
-    (item) => item.imdbID === movie.imdbID
-  );
-  if (index > -1) {
-    toggleItems.value.splice(index, 1);
-  } else {
-    toggleItems.value.push(movie);
-    fetchDetails(movie);
-  }
-};
-
-const fetchDetails = async (movie) => {
-  const url = `https://www.omdbapi.com/?i=${movie.imdbID}&apikey=${key}`;
-  try {
-    error.value = null;
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data.Response === 'True') {
-      movieDetail.value = data;
-    } else {
-      error.value = data.Error;
-    }
-  } catch (err) {
-    error.value = 'Something went wrong fetching the movie details!';
-  }
-};
+const loading = ref(false);
 
 const search = async () => {
+  if (!movieTitle.value.trim()) {
+    error.value = 'Please enter a movie title.';
+    return;
+  }
   const url = `https://www.omdbapi.com/?s=${encodeURIComponent(
     movieTitle.value
   )}&apikey=${key}`;
   try {
+    loading.value = true;
     error.value = null;
     const response = await fetch(url);
     const data = await response.json();
@@ -95,8 +54,50 @@ const search = async () => {
     }
   } catch (err) {
     error.value = 'Something went wrong!';
+  } finally {
+    loading.value = false;
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+.nav-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+}
+
+.nav-button {
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 25px;
+  border: none;
+}
+
+.search-wrapper {
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.search {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  margin-right: 10px;
+}
+.search-button {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+}
+</style>

@@ -6,16 +6,24 @@
 import { provide, ref } from 'vue';
 
 const favorites = ref([]);
+const isInList = ref(null);
 
 provide('favorites', favorites);
+provide('isInList', isInList);
+
 provide('addFavorite', (movie) => {
-  if (!favorites.value.includes(movie)) {
+  if (favorites.value.some((fav) => fav.imdbID === movie.imdbID)) {
+    isInList.value = movie.imdbID;
+  } else {
     favorites.value.push(movie);
+    isInList.value = null;
   }
 });
+
 provide('removeFavorite', (movie) => {
-  const movieId = movie.imdbID;
-  favorites.value = favorites.value.filter((fav) => fav.imdbID !== movieId);
+  favorites.value = favorites.value.filter(
+    (fav) => fav.imdbID !== movie.imdbID
+  );
 });
 </script>
 

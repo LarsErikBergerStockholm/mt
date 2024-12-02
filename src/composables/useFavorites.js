@@ -1,4 +1,4 @@
-import { provide, ref } from 'vue';
+import { provide, ref, toRaw } from 'vue';
 
 export const useFavorites = () => {
   const favorites = ref([]);
@@ -12,6 +12,8 @@ export const useFavorites = () => {
       isInList.value = movie.imdbID;
     } else {
       favorites.value.push(movie);
+      const raw = favorites.value.map(toRaw);
+      localStorage.setItem('favorites', JSON.stringify(raw));
       isInList.value = null;
     }
   });

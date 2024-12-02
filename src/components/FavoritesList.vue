@@ -18,9 +18,20 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { inject, onMounted } from 'vue';
 const favorites = inject('favorites');
 const removeFavorite = inject('removeFavorite');
+
+onMounted(async () => {
+  const loadFavorites = () => {
+    const storedFavorites = localStorage.getItem('favorites');
+    if (storedFavorites) {
+      favorites.value = JSON.parse(storedFavorites);
+    }
+  };
+
+  loadFavorites();
+});
 </script>
 
 <style scoped>
